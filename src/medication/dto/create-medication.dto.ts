@@ -1,4 +1,6 @@
 import {
+  ArrayMinSize,
+  IsArray,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -15,6 +17,8 @@ export class CreateMedicationDTO {
   unitType: UnitDTO;
 
   @ValidateNested({ each: true })
+  @IsArray()
+  @ArrayMinSize(1)
   @Type(() => DoseDTO)
   doses: DoseDTO[];
 
