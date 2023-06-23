@@ -9,3 +9,27 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Dose {
+  id           String     @id
+  quantity     Int
+  time         DateTime
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  medicationId String
+
+  @@map("dose")
+}
+
+model Medication {
+  id          String   @id
+  unitType    String
+  frequency   DateTime
+  until       DateTime
+  stock       Int
+  observation String
+  doses       Dose[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  @@map("medications")
+}
