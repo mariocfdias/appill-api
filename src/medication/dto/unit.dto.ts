@@ -1,4 +1,4 @@
 export enum UnitDTO {
-  PILL,
-  LIQUID,
+  PILL = "PILL",
+  LIQUID = "LIQUID",
 }

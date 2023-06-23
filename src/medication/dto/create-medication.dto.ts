@@ -9,7 +9,18 @@ import {
 } from 'class-validator';
 import { DoseDTO } from './dose.dto';
 import { UnitDTO } from './unit.dto';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
+
+enum Frequency {
+  "SEG",
+  "TER",
+  "QUA",
+  "QUI",
+  "SEX",
+  "SAB",
+  "DOM",
+  "ALL"
+}
 
 export class CreateMedicationDTO {
   @IsEnum(UnitDTO)
@@ -23,8 +34,8 @@ export class CreateMedicationDTO {
   doses: DoseDTO[];
 
   @IsNotEmpty()
-  @IsDateString()
-  frequency: Date;
+  @IsEnum(Frequency)
+  frequency: Frequency;
 
   @IsNotEmpty()
   @IsDateString()
@@ -33,6 +44,5 @@ export class CreateMedicationDTO {
   @IsNotEmpty()
   stock: number;
 
-  @IsString()
   observation: string;
 }

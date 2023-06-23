@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 model Dose {
@@ -23,7 +23,7 @@ model Dose {
 model Medication {
   id          String   @id
   unitType    String
-  frequency   DateTime
+  frequency   String
   until       DateTime
   stock       Int
   observation String
