@@ -7,23 +7,38 @@ import { v4 as uuidv4 } from 'uuid';
 export class MedicationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create({unitType, frequency, observation, stock,doses, until}: CreateMedicationDTO) {
-    await this.prisma.medication.create({data:{
-      id: uuidv4(),
-      unitType
-      ,
-      frequency: new Date(frequency), 
-      observation, 
-      stock,
-      doses : {
-        create: [...doses.map(dose => {
-          return {
-            quantity: dose.quantity,
-          time: new Date(dose.time),
-          id: uuidv4()
-        }
-        })]
-      } ,
-      until: new Date(until)}});
+  async create({
+    unitType,
+    frequency,
+    observation,
+    stock,
+    doses,
+    until,
+  }: CreateMedicationDTO) {
+    return await this.prisma.medication.create({
+      data: {
+        id: uuidv4(),
+        unitType,
+        frequency: frequency.toLocaleString(),
+        observation,
+        stock,
+        doses: {
+          create: [
+            ...doses.map((dose) => {
+              return {
+                quantity: dose.quantity,
+                time: new Date(dose.time),
+                id: uuidv4(),
+              };
+            }),
+          ],
+        },
+        until: new Date(until),
+      },
+    });
+  }
+
+  async getAll() {
+    return await this.prisma.medication.findMany();
   }
 }

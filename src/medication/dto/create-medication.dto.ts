@@ -12,14 +12,14 @@ import { UnitDTO } from './unit.dto';
 import { Transform, Type } from 'class-transformer';
 
 enum Frequency {
-  "SEG",
-  "TER",
-  "QUA",
-  "QUI",
-  "SEX",
-  "SAB",
-  "DOM",
-  "ALL"
+  'SEG',
+  'TER',
+  'QUA',
+  'QUI',
+  'SEX',
+  'SAB',
+  'DOM',
+  'ALL',
 }
 
 export class CreateMedicationDTO {
