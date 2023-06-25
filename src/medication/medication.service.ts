@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMedicationDTO } from './dto/create-medication.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class MedicationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create({
-    unitType,
-    frequency,
-    observation,
-    stock,
-    doses,
-    until,
-  }: CreateMedicationDTO) {
+  async create(
+    {
+      unitType,
+      frequency,
+      observation,
+      stock,
+      doses,
+      until,
+    }: CreateMedicationDTO,
+    userId,
+  ) {
     return await this.prisma.medication.create({
       data: {
         id: uuidv4(),
@@ -22,6 +24,7 @@ export class MedicationService {
         frequency: frequency.toLocaleString(),
         observation,
         stock,
+        pacientId: userId,
         doses: {
           create: [
             ...doses.map((dose) => {
@@ -39,6 +42,22 @@ export class MedicationService {
   }
 
   async getAll() {
-    return await this.prisma.medication.findMany();
+    return await this.prisma.medication.findMany({
+      include: {
+        doses: true,
+        pacient: true,
+      },
+    });
+  }
+
+  async getByUserId(userId: string) {
+    return await this.prisma.medication.findMany({
+      include: {
+        doses: true,
+      },
+      where: {
+        pacientId: userId,
+      },
+    });
   }
 }

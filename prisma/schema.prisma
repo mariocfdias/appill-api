@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Dose {
@@ -16,8 +16,24 @@ model Dose {
   time         DateTime
   medication   Medication @relation(fields: [medicationId], references: [id])
   medicationId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
 
-  @@map("dose")
+  @@map("doses")
+}
+
+model User {
+  id          String   @id
+  name        String
+  email       String
+  phoneNumber String
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  Medication Medication[]
+
+  @@map("users")
 }
 
 model Medication {
@@ -28,6 +44,8 @@ model Medication {
   stock       Int
   observation String
   doses       Dose[]
+  pacient     User?    @relation(fields: [pacientId], references: [id])
+  pacientId   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 

@@ -16,8 +16,8 @@ async function bootstrap() {
     .setDescription(
       'REST API responsavel por manipular os recursos da aplicação APPill',
     )
+    .addBearerAuth()
     .setVersion('1.0')
-    .addTag('medicaments')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
