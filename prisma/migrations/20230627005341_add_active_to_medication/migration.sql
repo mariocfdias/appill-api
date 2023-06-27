@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "doses" ADD COLUMN     "taken" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "takenAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "medications" ADD COLUMN     "active" BOOLEAN NOT NULL DEFAULT true;
