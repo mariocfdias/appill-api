@@ -5,5 +5,5 @@ export class UpdatePatchMedicationDTO extends PartialType(
   OmitType(UpdatePutMedicationDTO, ['doses'] as const),
 ) {
   @ApiProperty()
-  active: string;
+  active: boolean;
 }

@@ -87,9 +87,10 @@ export class MedicationService {
   }
 
   async update(id: string, data: UpdatePatchMedicationDTO) {
-    const { name, frequency, observation, stock, unitType, until } = data;
+    const { name, frequency, observation, stock, unitType, until, active } =
+      data;
     return await this.prisma.medication.update({
-      data: { name, observation, stock, unitType, until },
+      data: { name, observation, stock, unitType, until, active },
       where: { id },
     });
   }
