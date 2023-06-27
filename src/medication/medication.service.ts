@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMedicationDTO } from './dto/create-medication.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
+import { UpdatePatchMedicationDTO } from './dto/update-patch-medication';
 @Injectable()
 export class MedicationService {
   constructor(private readonly prisma: PrismaService) {}
@@ -14,6 +15,7 @@ export class MedicationService {
       stock,
       doses,
       until,
+      name,
     }: CreateMedicationDTO,
     userId,
   ) {
@@ -25,6 +27,7 @@ export class MedicationService {
         observation,
         stock,
         pacientId: userId,
+        name,
         doses: {
           create: [
             ...doses.map((dose) => {
@@ -41,11 +44,33 @@ export class MedicationService {
     });
   }
 
+  async exists(id: string) {
+    const medication = await this.prisma.medication.findUnique({
+      where: { id },
+    });
+
+    if (medication) return true;
+
+    return false;
+  }
+
   async getAll() {
     return await this.prisma.medication.findMany({
       include: {
         doses: true,
         pacient: true,
+      },
+    });
+  }
+
+  async deleteById(id: string) {
+    const exists = await this.exists(id);
+    if (!exists)
+      throw new BadRequestException(`Medicação ${id} não encontrada`);
+
+    return await this.prisma.medication.delete({
+      where: {
+        id,
       },
     });
   }
@@ -58,6 +83,14 @@ export class MedicationService {
       where: {
         pacientId: userId,
       },
+    });
+  }
+
+  async update(id: string, data: UpdatePatchMedicationDTO) {
+    const { name, frequency, observation, stock, unitType, until } = data;
+    return await this.prisma.medication.update({
+      data: { name, observation, stock, unitType, until },
+      where: { id },
     });
   }
 }

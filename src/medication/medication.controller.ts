@@ -1,9 +1,19 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateMedicationDTO } from './dto/create-medication.dto';
 import { MedicationService } from './medication.service';
 import { User } from 'src/decorators/user.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UpdatePatchMedicationDTO } from './dto/update-patch-medication';
 
 @ApiTags('Medication')
 @ApiBearerAuth()
@@ -25,5 +35,18 @@ export class MedicationController {
   @Get()
   async getByUser(@User() user) {
     return this.medicationService.getByUserId(user.id);
+  }
+
+  @Delete()
+  async delete(@Query('id') id: string) {
+    return this.medicationService.deleteById(id);
+  }
+
+  @Patch()
+  async update(
+    @Body() data: UpdatePatchMedicationDTO,
+    @Query('id') id: string,
+  ) {
+    this.medicationService.update(id, data);
   }
 }

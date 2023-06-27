@@ -5,13 +5,13 @@ import {
   IsEnum,
   IsIn,
   IsNotEmpty,
+  IsNumber,
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { DoseDTO } from './dose.dto';
-import { UnitDTO } from './unit.dto';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Dose } from '@prisma/client';
 
 enum Frequency {
   'SEG' = 'SEG',
@@ -24,7 +24,30 @@ enum Frequency {
   'ALL' = 'ALL',
 }
 
+class DoseDTO {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  quantity: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  time: Date;
+}
+
+enum UnitDTO {
+  PILL = 'PILL',
+  LIQUID = 'LIQUID',
+}
+
 export class CreateMedicationDTO {
+  @ApiProperty({
+    description: 'Tipo de unidade do medicamento',
+  })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
   @ApiProperty({
     description: 'Tipo de unidade do medicamento',
   })
