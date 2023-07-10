@@ -78,16 +78,12 @@ export class AuthService {
   async register(data: AuthRegisterDTO) {
     const { email, phoneNumber } = data;
 
+    Logger.log(email);
     const doesUserExist = await this.prisma.user.findFirst({
       where: {
-        OR: {
-          email,
-          phoneNumber,
-        },
+        OR: [{ email }, { phoneNumber }],
       },
     });
-
-    Logger.log(doesUserExist);
 
     if (doesUserExist) {
       throw new BadRequestException(
