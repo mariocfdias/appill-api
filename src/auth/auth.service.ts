@@ -80,8 +80,10 @@ export class AuthService {
 
     const doesUserExist = await this.prisma.user.findFirst({
       where: {
-        email,
-        phoneNumber,
+        OR: {
+          email,
+          phoneNumber,
+        },
       },
     });
 
