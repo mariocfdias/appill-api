@@ -26,6 +26,17 @@ model Dose {
   @@map("doses")
 }
 
+model DoseDirective {
+  id       String   @id
+  quantity Int
+  time     DateTime
+
+  medication   Medication @relation(fields: [medicationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  medicationId String
+
+  @@map("directives")
+}
+
 model User {
   id          String   @id
   name        String
@@ -41,19 +52,20 @@ model User {
 }
 
 model Medication {
-  id          String   @id
+  id          String          @id
   name        String
   unitType    String
   frequency   String
   until       DateTime
   stock       Int
   observation String
-  active      Boolean  @default(true)
+  active      Boolean         @default(true)
   doses       Dose[]
-  pacient     User?    @relation(fields: [pacientId], references: [id])
+  directives  DoseDirective[]
+  pacient     User?           @relation(fields: [pacientId], references: [id])
   pacientId   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
 
   @@map("medications")
 }

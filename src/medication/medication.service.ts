@@ -63,6 +63,17 @@ export class MedicationService {
             }),
           ],
         },
+        directives: {
+          create: [
+            ...doses.map((dose) => {
+              return {
+                quantity: dose.quantity,
+                time: new Date(dose.time),
+                id: uuidv4(),
+              };
+            }),
+          ],
+        },
         until: new Date(until),
       },
     });
@@ -104,7 +115,7 @@ export class MedicationService {
 
     return await this.prisma.medication.findMany({
       include: {
-        doses: true,
+        directives: true,
       },
       where: {
         pacientId: userId,

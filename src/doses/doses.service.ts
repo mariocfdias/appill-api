@@ -33,6 +33,9 @@ export class DoseService {
           },
         },
       },
+      include: {
+        medication: true,
+      },
       orderBy: {
         time: 'asc',
       },
