@@ -116,6 +116,7 @@ export class MedicationService {
     return await this.prisma.medication.findMany({
       include: {
         directives: true,
+        doses: true,
       },
       where: {
         pacientId: userId,
