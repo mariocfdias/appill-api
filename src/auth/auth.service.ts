@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -77,17 +78,20 @@ export class AuthService {
   async register(data: AuthRegisterDTO) {
     const { email, phoneNumber } = data;
 
-    const doesUserExist = this.prisma.user.findFirst({
+    const doesUserExist = await this.prisma.user.findFirst({
       where: {
         email,
         phoneNumber,
       },
     });
 
-    if (doesUserExist)
+    Logger.log(doesUserExist);
+
+    if (doesUserExist) {
       throw new BadRequestException(
         'Usuario com esse email ou numero ja existe',
       );
+    }
 
     const user = await this.userService.create(data);
 

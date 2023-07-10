@@ -16,6 +16,8 @@ model Dose {
   time         DateTime
   medication   Medication @relation(fields: [medicationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   medicationId String
+  sent         Boolean    @default(false)
+  sentAt       DateTime
   taken        Boolean    @default(false)
   takenAt      DateTime   @default(now())
   createdAt    DateTime   @default(now())

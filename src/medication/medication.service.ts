@@ -20,6 +20,21 @@ export class MedicationService {
     }: CreateMedicationDTO,
     userId,
   ) {
+    const dosesArrayDTO = [];
+    const startDate = new Date();
+    const endDate = new Date(until);
+
+    while (startDate <= endDate) {
+      doses.forEach((dose) => {
+        dosesArrayDTO.push({
+          quantity: dose.quantity,
+          time: new Date(dose.time),
+          id: uuidv4(),
+        });
+      });
+      startDate.setDate(startDate.getDate() + 1);
+    }
+
     return await this.prisma.medication.create({
       data: {
         id: uuidv4(),
@@ -31,7 +46,7 @@ export class MedicationService {
         name,
         doses: {
           create: [
-            ...doses.map((dose) => {
+            ...dosesArrayDTO.map((dose) => {
               return {
                 quantity: dose.quantity,
                 time: new Date(dose.time),
