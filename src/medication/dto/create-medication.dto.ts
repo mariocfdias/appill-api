@@ -14,14 +14,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Dose } from '@prisma/client';
 
 enum Frequency {
-  'SEG' = 'SEG',
-  'TER' = 'TER',
-  'QUA' = 'QUA',
-  'QUI' = 'QUI',
-  'SEX' = 'SEX',
-  'SAB' = 'SAB',
-  'DOM' = 'DOM',
-  'ALL' = 'ALL',
+  'EVEN_DAYS' = 'EVEN_DAYS',
+  'ODD_DAYS' = 'ODD_DAYS',
+  'ALL_DAYS' = 'ALL_DAYS',
 }
 
 class DoseDTO {

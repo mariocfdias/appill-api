@@ -3,6 +3,7 @@ import { CreateMedicationDTO } from './dto/create-medication.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdatePatchMedicationDTO } from './dto/update-patch-medication';
+import { GetMedicationDTO } from './dto/get-medication.dto';
 @Injectable()
 export class MedicationService {
   constructor(private readonly prisma: PrismaService) {}
@@ -75,13 +76,27 @@ export class MedicationService {
     });
   }
 
-  async getByUserId(userId: string) {
+  async getByUserId(userId: string, getMedicationOptions: GetMedicationDTO) {
+    const { isActive, date, name } = getMedicationOptions;
+
     return await this.prisma.medication.findMany({
       include: {
         doses: true,
       },
       where: {
         pacientId: userId,
+        name: {
+          contains: name,
+        },
+        active: isActive == undefined ? undefined : isActive === 'true',
+        AND: {
+          until: {
+            gte: date && new Date(date),
+          },
+          createdAt: {
+            lte: date && new Date(date),
+          },
+        },
       },
     });
   }

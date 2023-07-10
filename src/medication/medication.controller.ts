@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Patch,
   Post,
   Query,
@@ -14,6 +15,7 @@ import { User } from 'src/decorators/user.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdatePatchMedicationDTO } from './dto/update-patch-medication';
+import { GetMedicationDTO } from './dto/get-medication.dto';
 
 @ApiTags('Medication')
 @ApiBearerAuth()
@@ -33,8 +35,9 @@ export class MedicationController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async getByUser(@User() user) {
-    return this.medicationService.getByUserId(user.id);
+  async getByUser(@User() user, @Query() params: GetMedicationDTO) {
+    Logger.log(params);
+    return this.medicationService.getByUserId(user.id, params);
   }
 
   @Delete()

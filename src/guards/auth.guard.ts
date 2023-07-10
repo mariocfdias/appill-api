@@ -5,6 +5,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { env } from 'process';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/auth/auth.service';
 import { UserService } from 'src/user/user.service';
