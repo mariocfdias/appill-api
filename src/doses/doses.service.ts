@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetDoseDTO } from './dto/get-dose.dto';
 import { MedicationService } from 'src/medication/medication.service';
+import { UpdatePatchDoseDTO } from './dto/update-patch-dose.dto';
 
 @Injectable()
 export class DoseService {
@@ -16,6 +17,7 @@ export class DoseService {
     const dateStart = date ? new Date(date) : new Date();
     const dateEnd = date ? new Date(date) : new Date();
 
+    dateStart.setUTCHours(0, 0, 0, 0);
     dateEnd.setUTCHours(23, 59, 59, 999);
 
     return await this.prisma.dose.findMany({
@@ -31,10 +33,20 @@ export class DoseService {
           },
         },
       },
+      orderBy: {
+        time: 'asc',
+      },
     });
   }
 
-  async update(id: string, data) {}
+  async update(id: string, data: UpdatePatchDoseDTO) {
+    const { time, sent, taken } = data;
+
+    return await this.prisma.dose.update({
+      data: { time, sent, taken },
+      where: { id },
+    });
+  }
 
   async deleteByMedicationId(id: string) {
     const exists = await this.medicationService.exists(id);

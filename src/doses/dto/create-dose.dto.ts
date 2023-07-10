@@ -8,10 +8,11 @@ export class CreateDoseDTO {
 
   @ApiProperty()
   @IsNotEmpty()
-  quantity: number;
+  @IsBoolean()
+  sent: boolean;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsBoolean()
-  stock: number;
+  taken: boolean;
 }

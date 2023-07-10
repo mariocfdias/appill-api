@@ -26,9 +26,17 @@ export class MedicationService {
 
     while (startDate <= endDate) {
       doses.forEach((dose) => {
+        const doseTime = new Date(dose.time);
+        const time = startDate.setUTCHours(
+          doseTime.getUTCHours(),
+          doseTime.getUTCMinutes(),
+          doseTime.getUTCSeconds(),
+          doseTime.getUTCMilliseconds(),
+        );
+
         dosesArrayDTO.push({
           quantity: dose.quantity,
-          time: new Date(dose.time),
+          time,
           id: uuidv4(),
         });
       });

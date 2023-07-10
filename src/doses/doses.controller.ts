@@ -16,6 +16,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DoseService } from './doses.service';
 import { GetDoseDTO } from './dto/get-dose.dto';
+import { UpdatePatchDoseDTO } from './dto/update-patch-dose.dto';
 
 @ApiTags('Doses')
 @ApiBearerAuth()
@@ -37,11 +38,11 @@ export class DosesController {
 
   @Delete()
   async delete(@Query('id') id: string) {
-    throw this.dosesService.deleteByMedicationId(id);
+    return this.dosesService.deleteByMedicationId(id);
   }
 
   @Patch()
-  async update(@Body() data, @Query('id') id: string) {
-    throw new NotImplementedException();
+  async update(@Body() data: UpdatePatchDoseDTO, @Query('id') id: string) {
+    return this.dosesService.update(id, data);
   }
 }
