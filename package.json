@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "engines": {
-    "node": "19.0.1"
+    "node": "20.9.0"
   },
   "scripts": {
     "build": "npx nest build",
@@ -23,6 +23,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/axios": "^3.0.1",
+    "@nestjs/cache-manager": "^2.1.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.1.0",
@@ -30,6 +32,9 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^7.0.4",
     "@prisma/client": "4.16.1",
+    "axios": "^1.6.1",
+    "cache-manager": "^3.6.0",
+    "cache-manager-redis-store": "^2.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "moment": "^2.29.4",
