@@ -10,7 +10,7 @@ import { env } from 'process';
 @Module({
   imports: [
     JwtModule.register({
-      secretOrPrivateKey: env.JWT_SECRET,
+      secretOrPrivateKey: "" + env.JWT_SECRET,
     }),
     PrismaModule,
     UserModule,

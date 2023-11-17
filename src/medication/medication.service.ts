@@ -1,12 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateMedicationDTO } from './dto/create-medication.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdatePatchMedicationDTO } from './dto/update-patch-medication';
 import { GetMedicationDTO } from './dto/get-medication.dto';
+import { RxnormService } from 'src/rxnorm/rxnorm.service';
 @Injectable()
 export class MedicationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly rxNormService : RxnormService
+    ) {}
+
+    private readonly logger = new Logger()
 
   async create(
     {
@@ -17,12 +23,23 @@ export class MedicationService {
       doses,
       until,
       name,
+      rxid,
     }: CreateMedicationDTO,
     userId,
   ) {
+    
     const dosesArrayDTO = [];
     const startDate = new Date();
     const endDate = new Date(until);
+
+    const expectedRxnormMed = await this.rxNormService.getRxNormDrugName(rxid)
+    console.log(expectedRxnormMed.idGroup.name)
+
+    this.logger.debug(expectedRxnormMed)
+    
+    if(expectedRxnormMed?.idGroup?.name == undefined){
+      throw new HttpException("Não foi encontrado medicamento com esse RXID", HttpStatus.PRECONDITION_FAILED, { cause: new Error("Não foi encontrado medicamento com esse RXID")})
+    }
 
     while (startDate <= endDate) {
       doses.forEach((dose) => {
@@ -52,6 +69,8 @@ export class MedicationService {
         stock,
         pacientId: userId,
         name,
+        drugName: expectedRxnormMed.idGroup.name,
+        rxid,
         doses: {
           create: [
             ...dosesArrayDTO.map((dose) => {
@@ -134,6 +153,32 @@ export class MedicationService {
         },
       },
     });
+  }
+
+  
+  async getInteractions(userId: string) {
+
+    const medicamentList =  await this.prisma.medication.findMany({
+      where: {
+        pacientId: userId,
+      },
+    });
+
+    const rxNormIdList = medicamentList.map(medicament => medicament.rxid)
+
+    const interactionList = await this.rxNormService.getRxNormDrugInteractionByList(rxNormIdList)
+    
+    const parsedInteractions = []
+
+
+
+    interactionList.fullInteractionTypeGroup.forEach(fullInteractionType => fullInteractionType.fullInteractionType.forEach(interactionType => interactionType.interactionPair.forEach(pair => {
+      if(parsedInteractions.filter(interaction => interaction.description == pair.description).length == 0) parsedInteractions.push({severity: pair.severity, description: pair.description})
+    }))
+      )
+
+
+    return parsedInteractions
   }
 
   async update(id: string, data: UpdatePatchMedicationDTO) {

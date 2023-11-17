@@ -40,6 +40,12 @@ export class MedicationController {
     return this.medicationService.getByUserId(user.id, params);
   }
 
+  @UseGuards(AuthGuard)
+  @Get("interactions")
+  async getInteractionsByUser(@User() user) {
+    return this.medicationService.getInteractions(user.id);
+  }
+
   @Delete()
   async delete(@Query('id') id: string) {
     return this.medicationService.deleteById(id);

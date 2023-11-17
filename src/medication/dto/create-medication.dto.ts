@@ -74,5 +74,8 @@ export class CreateMedicationDTO {
   stock: number;
 
   @ApiProperty()
+  rxid: string;
+
+  @ApiProperty()
   observation: string;
 }
