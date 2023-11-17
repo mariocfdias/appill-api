@@ -23,7 +23,7 @@ import { env } from 'process';
       ttl: parseInt(env.CACHE_TTL),
       store: redisStore,
       max: 1000,
-      host: env.REDIS_URL,
+      url: env.REDIS_URL,
       port: 6379,
     })
   ],
